@@ -84,6 +84,10 @@ movies_to_add = [movie_1, movie_2, movie_3, movie_4, movie_5, movie_6, movie_7, 
 for movie in movies_to_add:
     db.add_movie(movie)  # Filmleri ekle
 
+print("------------------------")
+print("Here your Watched List!")
+print("------------------------")
+
 # Veritabanındaki tüm filmleri yazdırma
 movies = db.get_movies()
 for movie in movies:

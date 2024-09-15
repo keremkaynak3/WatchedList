@@ -20,10 +20,21 @@ class MovieDatabase:
         self.conn.commit()
 
     def add_movie(self, movie):
-        with self.conn:
-            self.cursor.execute('''INSERT INTO movies (name, genre, director, lead_actors, imdb_rating, personal_rating, notes)
-                                   VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                                (movie.name, movie.genre, movie.director, movie.lead_actors, movie.imdb_rating, movie.personal_rating, movie.notes))
+        cursor = self.conn.cursor()
+        # Aynı isimde bir film olup olmadığını kontrol ediyoruz
+        cursor.execute('SELECT * FROM movies WHERE name = ?', (movie.name,))
+        result = cursor.fetchone()
+
+        if result:
+            print(f"{movie.name} is already in the database.")
+        else:
+            cursor.execute('''
+                INSERT INTO movies (name, genre, director, lead_actors, imdb_rating, personal_rating, notes)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (movie.name, movie.genre, movie.director, movie.lead_actors, movie.imdb_rating, movie.personal_rating,
+                  movie.notes))
+            self.conn.commit()
+            print(f"{movie.name} has been added to the database.")
 
     def get_movies(self):
         self.cursor.execute('SELECT * FROM movies')
